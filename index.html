@@ -44,4 +44,1023 @@
         <p>Si vous n'êtes pas redirigé automatiquement, <a href="https://dnb-talent.netlify.app/artiste/mofa">cliquez ici pour accéder à la page de Mofa</a>.</p>
     </div>
 </body>
+ <style>
+:root {
+  --bg:          #060608;
+  --bg2:         #0c0c10;
+  --surface:     #111116;
+  --surface2:    #18181f;
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.13);
+  --text:        #f0f0f8;
+  --text2:       #a8a8c0;
+  --muted:       #55556a;
+  /* Red-blue gradient accents */
+  --red:         #e03a3a;
+  --red-glow:    rgba(224,58,58,0.25);
+  --blue:        #3a7ae0;
+  --blue-glow:   rgba(58,122,224,0.25);
+  --grad:        linear-gradient(135deg, #e03a3a 0%, #7b3ae0 50%, #3a7ae0 100%);
+  --grad-text:   linear-gradient(90deg, #e03a3a, #7b3ae0, #3a7ae0);
+  --glass:       rgba(255,255,255,0.04);
+  --glass-b:     rgba(255,255,255,0.10);
+  --nav-bg:      rgba(6,6,8,0.88);
+  --tag-bg:      rgba(224,58,58,0.12);
+  --tag-col:     #e03a3a;
+  --shadow:      0 24px 60px rgba(0,0,0,0.7);
+}
+[data-theme="light"] {
+  --bg:          #f4f4f8;
+  --bg2:         #eaeaef;
+  --surface:     #ffffff;
+  --surface2:    #f0f0f5;
+  --border:      rgba(0,0,0,0.08);
+  --border2:     rgba(0,0,0,0.15);
+  --text:        #101018;
+  --text2:       #44445a;
+  --muted:       #888898;
+  --red:         #c22020;
+  --red-glow:    rgba(194,32,32,0.15);
+  --blue:        #2255c8;
+  --blue-glow:   rgba(34,85,200,0.15);
+  --glass:       rgba(0,0,0,0.03);
+  --glass-b:     rgba(0,0,0,0.09);
+  --nav-bg:      rgba(244,244,248,0.90);
+  --tag-bg:      rgba(194,32,32,0.10);
+  --tag-col:     #c22020;
+  --shadow:      0 16px 40px rgba(0,0,0,0.12);
+}
+
+/* ══════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background 0.4s, color 0.4s;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+button { font-family: inherit; }
+
+#aurora {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.9;
+  transition: opacity 0.8s;
+}
+[data-theme="light"] #aurora { opacity: 0.12; }
+body > *:not(#aurora):not(nav):not(#cconfetti) { position: relative; z-index: 1; }
+
+
+
+/* ══════════════════════════════════════
+   NAV
+══════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9000;
+  background: var(--nav-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.4s;
+}
+.nav-inner {
+  max-width: 1160px; margin: 0 auto;
+  padding: 0 20px;
+  height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.12em;
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.nav-links {
+  display: flex; align-items: center; gap: 4px;
+}
+.nav-links a {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: var(--text2);
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+.nav-links a:hover { color: var(--text); background: var(--glass); }
+.nav-right { display: flex; align-items: center; gap: 8px; }
+
+.lg-btn {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), filter 0.2s;
+}
+.lg-btn:hover { transform: scale(1.05); filter: brightness(1.12); }
+.lg-btn:active { transform: scale(0.96); }
+.lg-btn .shell {
+  position: absolute; inset: 0; border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--glass-b);
+  box-shadow:
+    inset 3px 3px 0.5px -3.5px rgba(255,255,255,0.09),
+    inset -3px -3px 0.5px -3.5px rgba(255,255,255,0.85),
+    inset 1px 1px 1px -0.5px rgba(255,255,255,0.55),
+    inset -1px -1px 1px -0.5px rgba(255,255,255,0.55),
+    inset 0 0 8px 6px rgba(255,255,255,0.10),
+    0 0 14px rgba(0,0,0,0.18);
+  backdrop-filter: url("#lgsv");
+  z-index: 0;
+}
+.lg-btn span, .lg-btn svg { position: relative; z-index: 1; }
+.lg-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+.lg-btn.lg-cta {
+  padding: 14px 30px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.lg-btn.lg-cta .shell {
+  background: rgba(255,255,255,0.06);
+}
+.lg-btn.lg-red .shell {
+  background: rgba(224,58,58,0.12);
+  border-color: rgba(224,58,58,0.3);
+  box-shadow:
+    inset 0 0 8px 4px rgba(224,58,58,0.08),
+    0 0 18px rgba(224,58,58,0.1),
+    inset 1px 1px 1px -0.5px rgba(255,100,100,0.4);
+}
+.lg-btn.lg-red { color: var(--red); }
+
+.hamburger {
+  display: none;
+  flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer;
+  padding: 6px;
+}
+.hamburger span {
+  width: 22px; height: 2px;
+  background: var(--text2);
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+  display: block;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* mobile menu */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  background: var(--nav-bg);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 20px 16px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text2);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.mobile-menu a:last-child { border-bottom: none; }
+
+#about { padding-top: calc(58px + 48px); }
+
+section { padding: 88px 0; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+.sec-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sec-label::after {
+  content: ''; flex: 1; max-width: 48px;
+  height: 1px;
+  background: var(--grad);
+  opacity: 0.5;
+}
+.sec-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  letter-spacing: 0.03em;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+
+
+#about { background: var(--bg2); }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 64px;
+  align-items: center;
+}
+.about-img-frame {
+  position: relative;
+  aspect-ratio: 3/4;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border2);
+}
+.about-img-frame img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+.about-img-frame .img-fallback {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, #12121a 0%, #1e0a0a 40%, #0a0a1e 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.about-img-frame .img-fallback span {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 9rem;
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.6;
+}
+.about-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(6,6,8,0.5) 0%, transparent 50%);
+}
+.about-quote {
+  position: absolute; bottom: 20px; left: 20px; right: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.7);
+  font-style: italic;
+}
+.about-body { font-size: 1rem; color: var(--text2); line-height: 1.85; max-width: 520px; }
+.about-body p + p { margin-top: 18px; }
+em { color: var(--text); font-style: italic; }
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 40px;
+}
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 14px;
+  text-align: center;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.stat:hover { border-color: rgba(224,58,58,0.4); transform: translateY(-3px); }
+.stat-n {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.04em;
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+.stat-l { font-size: 0.7rem; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; }
+
+#music { background: var(--surface); }
+.disco-loading {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  margin-top: 32px;
+}
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.disco-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 24px;
+  letter-spacing: 0.06em;
+}
+/* Spotify embed player */
+.spotify-player {
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 28px;
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.releases-scroll-wrap {
+  position: relative;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.releases-scroll-wrap::before,
+.releases-scroll-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+.releases-scroll-wrap::before {
+  left: 0;
+  background: linear-gradient(to right, var(--surface), transparent);
+}
+.releases-scroll-wrap::after {
+  right: 0;
+  background: linear-gradient(to left, var(--surface), transparent);
+}
+.releases-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: max-content;
+  animation: relScroll 30s linear infinite;
+  padding-bottom: 6px;
+}
+.releases-grid:hover {
+  animation-play-state: paused;
+}
+@keyframes relScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.rel-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  display: block;
+  flex: 0 0 180px;
+  width: 180px;
+}
+.rel-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(224,58,58,0.3);
+  box-shadow: 0 14px 40px rgba(224,58,58,0.08), 0 4px 12px rgba(0,0,0,0.3);
+}
+.rel-art {
+  aspect-ratio: 1;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #1a0a0a, #0a0a1a);
+}
+.rel-art img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.rel-card:hover .rel-art img { transform: scale(1.04); }
+.rel-art-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  background: var(--grad);
+  opacity: 0.4;
+  color: #fff;
+}
+.rel-play {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 2rem;
+  color: #fff;
+}
+.rel-card:hover .rel-play { opacity: 1; }
+.rel-info { padding: 12px 14px; }
+.rel-title {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  margin-bottom: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rel-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+.rel-type {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  background: var(--tag-bg);
+  color: var(--tag-col);
+}
+.rel-type.blue {
+  background: rgba(58,122,224,0.12);
+  color: var(--blue);
+}
+
+/* Streaming row */
+.stream-row {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-top: 44px;
+}
+.stream-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.83rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  transition: transform 0.2s, border-color 0.25s, box-shadow 0.25s;
+  position: relative; overflow: hidden;
+}
+.stream-pill::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--sc, transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.stream-pill:hover { transform: translateY(-2px); }
+.stream-pill:hover::before { opacity: 0.09; }
+.stream-pill:hover { border-color: var(--sc, var(--border)); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+.stream-pill svg { width: 18px; height: 18px; flex-shrink: 0; position: relative; z-index: 1; }
+.stream-pill span { position: relative; z-index: 1; }
+.sp-spotify { --sc: #1db954; }
+.sp-apple   { --sc: #fc3c44; }
+.sp-youtube { --sc: #ff0000; }
+.sp-tiktok  { --sc: #ff0050; }
+.sp-insta   { --sc: #e1306c; }
+
+/* ══════════════════════════════════════
+   PRESS
+══════════════════════════════════════ */
+#press { background: var(--bg2); }
+.press-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+  margin-top: 36px;
+}
+.press-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 26px 24px;
+  display: flex; flex-direction: column; gap: 14px;
+  text-decoration: none; color: inherit;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.press-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(58,122,224,0.35);
+}
+.press-src {
+  display: flex; align-items: center; gap: 10px;
+}
+.press-logo {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.press-outlet { font-size: 0.78rem; font-weight: 600; color: var(--text2); }
+.press-title {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.press-excerpt { font-size: 0.82rem; color: var(--text2); line-height: 1.75; }
+.press-tag {
+  align-self: flex-start;
+  background: rgba(58,122,224,0.12);
+  color: var(--blue);
+  font-size: 0.65rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.06em;
+}
+.press-arrow {
+  margin-top: auto;
+  font-size: 0.8rem;
+  color: var(--muted);
+  display: flex; align-items: center; gap: 6px;
+  transition: color 0.2s, gap 0.2s;
+}
+.press-card:hover .press-arrow { color: var(--blue); gap: 10px; }
+
+/* ══════════════════════════════════════
+   CONNECT / SOCIAL
+══════════════════════════════════════ */
+#connect { background: var(--surface); }
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+  margin-top: 36px;
+}
+.soc-tile {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px 16px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  text-align: center;
+  text-decoration: none; color: var(--text);
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.soc-tile:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+}
+.soc-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.3s;
+}
+.soc-tile:hover .soc-icon { transform: rotate(-8deg) scale(1.12); }
+.soc-icon svg { width: 26px; height: 26px; }
+.si-sp  { background: #1db954; color: #000; }
+.si-ap  { background: linear-gradient(135deg,#fc3c44,#ff8088); color: #fff; }
+.si-yt  { background: #ff0000; color: #fff; }
+.si-tt  { background: #000; color: #fff; border: 1px solid var(--border); }
+.si-ig  { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: #fff; }
+.soc-name { font-weight: 600; font-size: 0.88rem; }
+.soc-handle { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); }
+.si-tile-sp:hover  { border-color: #1db954; }
+.si-tile-ap:hover  { border-color: #fc3c44; }
+.si-tile-yt:hover  { border-color: #ff0000; }
+.si-tile-tt:hover  { border-color: #ff0050; }
+.si-tile-ig:hover  { border-color: #e1306c; }
+
+/* Vinyl easter egg */
+.vinyl-row {
+  display: flex; align-items: center; gap: 18px;
+  margin-top: 56px;
+  padding: 20px 24px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+.vinyl-row:hover { border-color: rgba(224,58,58,0.3); }
+.vinyl {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: conic-gradient(#111 0deg, #1a1a1a 30deg, #111 60deg, #0a0a0a 90deg, #111 120deg, #1a1a1a 150deg, #0a0a0a 180deg, #111 210deg, #1a1a1a 240deg, #111 270deg, #0a0a0a 300deg, #1a1a1a 330deg, #111 360deg);
+  border: 2px solid #2a2a2a;
+  display: flex; align-items: center; justify-content: center;
+  animation: spinVinyl 3.5s linear infinite;
+  animation-play-state: paused;
+  flex-shrink: 0;
+}
+.vinyl::after {
+  content: '';
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--red);
+  border: 3px solid var(--bg);
+}
+.vinyl.on { animation-play-state: running; }
+@keyframes spinVinyl { to { transform: rotate(360deg); } }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 48px 20px;
+  text-align: center;
+}
+.footer-in {
+  max-width: 1160px; margin: 0 auto;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  letter-spacing: 0.12em;
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.footer-tagline {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+.footer-copy { font-size: 0.72rem; color: var(--muted); margin-top: 8px; }
+
+.stat-loading {
+  display: inline-block;
+  opacity: 0.4;
+  animation: statPulse 1.2s ease-in-out infinite;
+}
+@keyframes statPulse {
+  0%,100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(24px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.rv {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+.rv.vis { opacity: 1; transform: none; }
+.rv.d1 { transition-delay: 0.1s; }
+.rv.d2 { transition-delay: 0.2s; }
+.rv.d3 { transition-delay: 0.3s; }
+.rv.d4 { transition-delay: 0.4s; }
+
+/* Confetti */
+#cconfetti {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 99997;
+}
+
+/* SVG filter (hidden) */
+.svg-filters { display: none; }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (max-width: 860px) {
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .about-img-frame { max-width: 300px; margin: 0 auto; }
+}
+@media (max-width: 600px) {
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .hero-photo-wrap { width: min(160px, 48vw); }
+  section { padding: 64px 0; }
+  .social-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .lg-btn.lg-cta { padding: 12px 22px; font-size: 0.85rem; }
+  .rel-card { flex: 0 0 150px; width: 150px; }
+}
+@media (max-width: 380px) {
+  .rel-card { flex: 0 0 140px; width: 140px; }
+  .hero-name { letter-spacing: 0.02em; }
+}
+</style>   
+    <body>
+<nav id="topnav">
+  <div class="nav-inner">
+    <a href="#about" class="nav-logo">MOFA</a>
+    <div class="nav-links" id="navlinks">
+      <a href="#about" data-key="nav_about">À propos</a>
+      <a href="#music" data-key="nav_music">Musique</a>
+      <a href="#press" data-key="nav_press">Presse</a>
+      <a href="#connect" data-key="nav_connect">Réseaux</a>
+    </div>
+    <div class="nav-right">
+      <button class="lg-btn" id="lang-btn" title="Langue">
+        <div class="shell"></div>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span id="lang-lbl">EN</span>
+      </button>
+      <button class="lg-btn" id="theme-btn" title="Thème">
+        <div class="shell"></div>
+        <svg id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="i-sun" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="hamburger" id="ham" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mob-menu">
+    <a href="#about" data-key="nav_about">À propos</a>
+    <a href="#music" data-key="nav_music">Musique</a>
+    <a href="#press" data-key="nav_press">Presse</a>
+    <a href="#connect" data-key="nav_connect">Réseaux</a>
+  </div>
+</nav>
+
+
+<!-- ═══════ ABOUT ═══════ -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="rv">
+        <div class="about-img-frame">
+          <img
+            src="https://image-cdn-fa.spotifycdn.com/image/ab6761610000f1789e05c37ae35305d5f7e357b2"
+            alt="MOFA"
+            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;"
+            onerror="this.style.display='none';"
+          >
+          <div class="about-img-overlay"></div>
+          <div class="about-quote">"I'm here to say whatever I want."</div>
+        </div>
+      </div>
+      <div class="rv d2">
+        <div class="sec-label" data-key="about_label">À propos</div>
+        <h2 class="sec-title" data-key="about_title">Son univers musical</h2>
+        <div class="about-body">
+          <p data-key="about_p1">MOFA forge une identité musicale à la croisée du rap trap, du UK drill et du R&B, mêlant influences internationales et regard acéré sur son quotidien. Un flow tranchant, des textes percutants — aucun filtre.</p>
+          <p data-key="about_p2">Repéré au festival NOUVEAU organisé par la Région Nouvelle-Aquitaine en 2024, MOFA a prouvé sa présence scénique aux côtés de 2&nbsp;500 jeunes artistes. Son Spotify le résume en une phrase : <em>"I'm here to say whatever I want."</em></p>
+        </div>
+        <div class="stats-row rv d3">
+          <div class="stat">
+            <div class="stat-n" id="stat-monthly"><span class="stat-loading">…</span></div>
+            <div class="stat-l" data-key="stat_monthly">Auditeurs mensuels</div>
+          </div>
+          <div class="stat">
+            <div class="stat-n" id="stat-streams"><span class="stat-loading">…</span></div>
+            <div class="stat-l" data-key="stat_streams">Streams Spotify</div>
+          </div>
+          <div class="stat">
+            <div class="stat-n">2025</div>
+            <div class="stat-l" data-key="stat_debut">Album Ronaldinho</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ MUSIC ═══════ -->
+<section id="music">
+  <div class="wrap">
+    <div class="sec-label rv" data-key="music_label">Discographie</div>
+    <h2 class="sec-title rv d1" data-key="music_title">Sa musique</h2>
+
+    <div class="spotify-player rv d2">
+      <iframe
+        id="spotify-embed"
+        style="border-radius:14px;"
+        src="https://open.spotify.com/embed/artist/13pObEDDq8UlCAmU1Xwu3v?utm_source=generator&theme=0"
+        width="100%"
+        height="380"
+        frameborder="0"
+        allowfullscreen=""
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy">
+      </iframe>
+    </div>
+
+    <p class="disco-meta rv" id="disco-meta">Chargement de la discographie via Spotify…</p>
+
+    <div class="releases-scroll-wrap rv d1">
+    <div class="releases-grid" id="releases-grid">
+      <a href="https://open.spotify.com/album/60IpeZYc3a3nssWCvAFgVt" target="_blank" class="rel-card">
+        <div class="rel-art">
+          <img src="https://i.scdn.co/image/ab67616d0000b273a6f6f2a2d2b8b0e8a3a8a3a2" alt="Ronaldinho" onerror="this.parentElement.innerHTML='<div class=rel-art-placeholder>🏆</div>'">
+          <div class="rel-play">▶</div>
+        </div>
+        <div class="rel-info">
+          <div class="rel-title">Ronaldinho</div>
+          <div class="rel-meta">2025 · 8 titres</div>
+          <span class="rel-type blue" data-key="type_album">Album</span>
+        </div>
+      </a>
+      <a href="https://open.spotify.com/album/6Whrl2H0G2btBn1yrKcUvM" target="_blank" class="rel-card">
+        <div class="rel-art">
+          <img src="https://i.scdn.co/image/ab67616d0000b2735b3a3e5b0a3a3a5b3a3a3a5b" alt="Dembélé" onerror="this.parentElement.innerHTML='<div class=rel-art-placeholder>⚽</div>'">
+          <div class="rel-play">▶</div>
+        </div>
+        <div class="rel-info">
+          <div class="rel-title">Dembélé</div>
+          <div class="rel-meta">2026</div>
+          <span class="rel-type" data-key="type_single">Single</span>
+        </div>
+      </a>
+      <a href="https://open.spotify.com/album/0I8rs8L3SbYsFCeZmX6xVo" target="_blank" class="rel-card">
+        <div class="rel-art">
+          <img src="https://i.scdn.co/image/ab67616d0000b273b6b6b6b6b6b6b6b6b6b6b6b6" alt="Love Is Like Drugs" onerror="this.parentElement.innerHTML='<div class=rel-art-placeholder>💊</div>'">
+          <div class="rel-play">▶</div>
+        </div>
+        <div class="rel-info">
+          <div class="rel-title">Love Is Like Drugs</div>
+          <div class="rel-meta">2026</div>
+          <span class="rel-type" data-key="type_single">Single</span>
+        </div>
+      </a>
+      <a href="https://open.spotify.com/album/6kYEtIBR1vajk912MCoFNP" target="_blank" class="rel-card">
+        <div class="rel-art">
+          <img src="https://i.scdn.co/image/ab67616d0000b273c0c0c0c0c0c0c0c0c0c0c0c0" alt="Love Me Back" onerror="this.parentElement.innerHTML='<div class=rel-art-placeholder>🖤</div>'">
+          <div class="rel-play">▶</div>
+        </div>
+        <div class="rel-info">
+          <div class="rel-title">Love Me Back</div>
+          <div class="rel-meta">2026</div>
+          <span class="rel-type" data-key="type_single">Single</span>
+        </div>
+      </a>
+      <a href="https://open.spotify.com/album/58vIN5wUEm6tpufOfUda7s" target="_blank" class="rel-card">
+        <div class="rel-art">
+          <img src="https://i.scdn.co/image/ab67616d0000b273d1d1d1d1d1d1d1d1d1d1d1d1" alt="Frida" onerror="this.parentElement.innerHTML='<div class=rel-art-placeholder>🌸</div>'">
+          <div class="rel-play">▶</div>
+        </div>
+        <div class="rel-info">
+          <div class="rel-title">Frida.</div>
+          <div class="rel-meta">2025</div>
+          <span class="rel-type" data-key="type_single">Single</span>
+        </div>
+      </a>
+      <a href="https://open.spotify.com/album/2mrdepgp2zRgW1NtitwWHm" target="_blank" class="rel-card">
+        <div class="rel-art">
+          <img src="https://image-cdn-fa.spotifycdn.com/image/ab67616d0000b2732c78b1a3d97ac8e3e34c4c4c" alt="Cold Like Palmer" onerror="this.parentElement.innerHTML='<div class=rel-art-placeholder>🧊</div>'">
+          <div class="rel-play">▶</div>
+        </div>
+        <div class="rel-info">
+          <div class="rel-title">Cold Like Palmer</div>
+          <div class="rel-meta">2025 · Remake</div>
+          <span class="rel-type" data-key="type_single">Single</span>
+        </div>
+      </a>
+    </div>
+    </div>
+
+    <!-- Streaming platforms -->
+    <div class="sec-label rv" style="margin-top:52px;" data-key="stream_label">Plateformes</div>
+    <div class="stream-row rv d1">
+      <a href="https://open.spotify.com/intl-fr/artist/13pObEDDq8UlCAmU1Xwu3v" target="_blank" class="stream-pill sp-spotify">
+        <svg viewBox="0 0 24 24" fill="#1db954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        <span>Spotify</span>
+      </a>
+      <a href="https://music.apple.com/us/artist/mofa/1818580932" target="_blank" class="stream-pill sp-apple">
+        <svg viewBox="0 0 24 24" fill="#fc3c44"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        <span>Apple Music</span>
+      </a>
+      <a href="https://www.youtube.com/@mofa.artist" target="_blank" class="stream-pill sp-youtube">
+        <svg viewBox="0 0 24 24" fill="#ff0000"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+        <span>YouTube</span>
+      </a>
+      <a href="https://www.tiktok.com/@mofa.2lc" target="_blank" class="stream-pill sp-tiktok">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.78 1.53V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+        <span>TikTok</span>
+      </a>
+      <a href="https://www.instagram.com/mofa.artist" target="_blank" class="stream-pill sp-insta">
+        <svg viewBox="0 0 24 24" fill="#e1306c"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        <span>Instagram</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ PRESS ═══════ -->
+<section id="press">
+  <div class="wrap">
+    <div class="sec-label rv" data-key="press_label">Presse</div>
+    <h2 class="sec-title rv d1" data-key="press_title">Ils en parlent</h2>
+    <p class="about-body rv d2" data-key="press_intro">MOFA a fait parler de lui lors du festival NOUVEAU 2024, événement régional majeur réunissant 2&nbsp;500 jeunes artistes.</p>
+    <div class="press-grid">
+      <a href="https://www.ouest-france.fr/culture/musiques/un-jeune-rappeur-thouarsais-se-produira-au-nouveau-festival-organise-par-la-region-nouvelle-aquitaine-a1336e5c-f087-11f0-977d-9ddad21d78c7" target="_blank" class="press-card rv">
+        <div class="press-src">
+          <div class="press-logo">OF</div>
+          <div class="press-outlet">Ouest-France</div>
+        </div>
+        <div class="press-title" data-key="press1_title">Un jeune rappeur au festival NOUVEAU de la Région Nouvelle-Aquitaine</div>
+        <div class="press-excerpt" data-key="press1_exc">MOFA a été sélectionné pour se produire lors du festival NOUVEAU, événement phare dédié aux jeunes talents artistiques de la région.</div>
+        <div class="press-tag" data-key="press_tag1">Festival · 2024</div>
+        <div class="press-arrow"><span>Lire l'article</span> →</div>
+      </a>
+      <a href="https://www.lanouvellerepublique.fr/thouars/l-effervescence-monte-avant-le-nouveau-festival-ou-2-500-jeunes-de-nouvelle-aquitaine-vont-enfin-devoiler-leurs-projets-artistiques-1773774349" target="_blank" class="press-card rv d1">
+        <div class="press-src">
+          <div class="press-logo">NR</div>
+          <div class="press-outlet">La Nouvelle République</div>
+        </div>
+        <div class="press-title" data-key="press2_title">L'effervescence monte avant le festival NOUVEAU</div>
+        <div class="press-excerpt" data-key="press2_exc">À l'approche du festival, l'excitation est palpable parmi les 2&nbsp;500 jeunes artistes de Nouvelle-Aquitaine, dont MOFA, prêts à monter sur scène.</div>
+        <div class="press-tag" data-key="press_tag2">Avant-festival · 2024</div>
+        <div class="press-arrow"><span>Lire l'article</span> →</div>
+      </a>
+      <a href="https://www.lanouvellerepublique.fr/thouars/de-poitiers-a-thouars-ils-ont-mis-le-feu-a-la-scene-recit-d-une-journee-intense-au-coeur-du-nouveau-festival-en-gironde-1779388976" target="_blank" class="press-card rv d2">
+        <div class="press-src">
+          <div class="press-logo">NR</div>
+          <div class="press-outlet">La Nouvelle République</div>
+        </div>
+        <div class="press-title" data-key="press3_title">Ils ont mis le feu à la scène : récit du festival NOUVEAU en Gironde</div>
+        <div class="press-excerpt" data-key="press3_exc">Compte-rendu d'une journée intense. MOFA a démontré son talent sur scène dans une atmosphère survoltée en Gironde.</div>
+        <div class="press-tag" data-key="press_tag3">Live · 2024</div>
+        <div class="press-arrow"><span>Lire l'article</span> →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CONNECT ═══════ -->
+<section id="connect">
+  <div class="wrap">
+    <div class="sec-label rv" data-key="connect_label">Réseaux sociaux</div>
+    <h2 class="sec-title rv d1" data-key="connect_title">Suivre MOFA</h2>
+    <div class="social-grid">
+      <a href="https://open.spotify.com/intl-fr/artist/13pObEDDq8UlCAmU1Xwu3v" target="_blank" class="soc-tile si-tile-sp rv">
+        <div class="soc-icon si-sp">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        </div>
+        <div class="soc-name">Spotify</div>
+        <div class="soc-handle">@MOFA</div>
+      </a>
+      <a href="https://music.apple.com/us/artist/mofa/1818580932" target="_blank" class="soc-tile si-tile-ap rv d1">
+        <div class="soc-icon si-ap">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        </div>
+        <div class="soc-name">Apple Music</div>
+        <div class="soc-handle">MOFA</div>
+      </a>
+      <a href="https://www.youtube.com/@mofa.artist" target="_blank" class="soc-tile si-tile-yt rv d2">
+        <div class="soc-icon si-yt">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+        </div>
+        <div class="soc-name">YouTube</div>
+        <div class="soc-handle">@mofa.artist</div>
+      </a>
+      <a href="https://www.tiktok.com/@mofa.2lc" target="_blank" class="soc-tile si-tile-tt rv d1">
+        <div class="soc-icon si-tt">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.78 1.53V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+        </div>
+        <div class="soc-name">TikTok</div>
+        <div class="soc-handle">@mofa.2lc</div>
+      </a>
+      <a href="https://www.instagram.com/mofa.artist" target="_blank" class="soc-tile si-tile-ig rv d2">
+        <div class="soc-icon si-ig">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </div>
+        <div class="soc-name">Instagram</div>
+        <div class="soc-handle">@mofa.artist</div>
+      </a>
+    </div>
+
+    <!-- Easter egg vinyl -->
+    <div class="vinyl-row rv" id="vinyl-wrap">
+      <div class="vinyl" id="vinyl"></div>
+      <div>
+        <p style="font-weight:600;font-size:1rem;" data-key="vinyl_cta">Clique pour célébrer MOFA 🎉</p>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:4px;" data-key="vinyl_sub">Easter egg caché...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="footer-in">
+    <div class="footer-logo">MOFA</div>
+    <div class="footer-tagline" data-key="footer_quote">"I'm here to say whatever I want."</div>
+    <div class="footer-copy" data-key="footer_copy">© 2025 MOFA · Tous droits réservés</div>
+  </div>
+</footer> 
+    </body>
 </html>
