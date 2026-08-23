@@ -1,8 +1,0 @@
-{
-  "name":"mofa-site-refonte",
-  "private":true,
-  "type":"module",
-  "scripts":{"build":"node scripts/build.mjs","youtube:sync":"node scripts/youtube-sync.mjs","scheduled:publish":"node scripts/scheduled-publish.mjs","seed:admins":"node scripts/seed-admins.mjs"},
-  "dependencies":{"firebase-admin":"^13.5.0"},
-  "devDependencies":{}
-}
